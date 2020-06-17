@@ -58,7 +58,7 @@ public class UsersFragment extends Fragment {
                 myUsers.clear();
 
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    User user = dataSnapshot.getValue(User.class);
+                    User user = snapshot.getValue(User.class);
 
                     if(!user.getId().equals(firebaseUser.getUid())){
                         myUsers.add(user);
