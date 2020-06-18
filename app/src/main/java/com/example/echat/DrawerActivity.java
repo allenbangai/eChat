@@ -92,6 +92,11 @@ public class DrawerActivity extends AppCompatActivity {
                     }*/
                     User user = dataSnapshot.getValue(User.class);
                     username.setText(user.getUsername());
+                    if(user.getProfileImageUrl().equals("default")){
+                        profileImage.setImageResource(R.drawable.profile);
+                    }else{
+                        Glide.with(DrawerActivity.this).load(user.getProfileImageUrl()).into(profileImage);
+                    }
                     helper.toastMessage(getApplicationContext(), user.getUsername());
                 }
             }

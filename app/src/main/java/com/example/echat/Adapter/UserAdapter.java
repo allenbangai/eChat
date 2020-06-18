@@ -2,6 +2,7 @@ package com.example.echat.Adapter;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.echat.MessageActivity;
 import com.example.echat.Model.User;
 import com.example.echat.R;
 
@@ -89,13 +91,22 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        User user = myUsers.get(position);
+        final User user = myUsers.get(position);
         holder.username.setText(user.getUsername());
         if(user.getProfileImageUrl().equals("default")){
             holder.userImage.setImageResource(R.drawable.profile);
         }else {
             Glide.with(context).load(user.getProfileImageUrl()).into(holder.userImage);
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, MessageActivity.class);
+                intent.putExtra("userID", user.getId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     /**
