@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.example.echat.MessageActivity;
 import com.example.echat.Model.User;
 import com.example.echat.R;
+import com.example.echat.Util.Helper;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private Context context;
     private List<User> myUsers;
+    private Helper helper = new Helper();
 
     public UserAdapter(Context context, List<User> users){
         this.context = context;
@@ -104,6 +106,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             public void onClick(View v) {
                 Intent intent = new Intent(context, MessageActivity.class);
                 intent.putExtra("userID", user.getId());
+                helper.toastMessage(context, user.getId());
                 context.startActivity(intent);
             }
         });

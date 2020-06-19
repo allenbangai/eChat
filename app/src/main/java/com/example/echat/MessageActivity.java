@@ -35,7 +35,7 @@ public class MessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
-        Toolbar toolbar1 = findViewById(R.id.toolbar01);
+        /*Toolbar toolbar1 = findViewById(R.id.toolbar01);
         setSupportActionBar(toolbar1);
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -44,16 +44,17 @@ public class MessageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 finish();
             }
-        });
+        });*/
 
         helper = new Helper();
-        profileImage = findViewById(R.id.user_profile_image);
-        username = findViewById(R.id.user_username);
+        profileImage = findViewById(R.id.message_profileImage);
+        username = findViewById(R.id.message_username);
         intent = getIntent();
         String userID = intent.getStringExtra("userID");
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users").child(userID);
+        helper.toastMessage(this, "user ID is: " + userID);
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
