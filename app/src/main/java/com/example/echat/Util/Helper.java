@@ -1,5 +1,6 @@
 package com.example.echat.Util;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
@@ -11,9 +12,30 @@ import com.example.echat.RegisterActivity;
 
 public class Helper{
     Intent intent;
+    Context context;
+    private ProgressDialog progressDialog;
+
     public Helper(){
 
     }
+
+    public Helper(Context context){
+        this.context = context;
+    }
+
+    //progress dialog functions
+    public void progressDialogStart(String titleMessage, String detailMessage){
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setTitle(titleMessage);
+        progressDialog.setMessage(detailMessage);
+        progressDialog.show();
+        progressDialog.setCanceledOnTouchOutside(true);
+    }
+
+    public void progressDialogEnd(){
+        progressDialog.dismiss();
+    }
+
 
     public void toastMessage(Context context, String message){
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
@@ -54,5 +76,8 @@ public class Helper{
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>*/
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <item name="android:statusBarColor">@android:color/transparent</item>
+    */
 }

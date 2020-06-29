@@ -7,8 +7,10 @@
     tools:context=".MessageActivity">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
         android:theme="@style/AppTheme.AppBarOverlay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,27 +20,74 @@
             android:id="@+id/toolbar02"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" >
+            android:background="@color/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/message_profileImage"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/profile"
-                android:layout_margin="5dp"/>
+                android:layout_margin="5dp"
+                android:background="@drawable/circular_drawable"
+                android:padding="1dp"
+                android:src="@drawable/profile" />
 
             <TextView
                 android:id="@+id/message_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:text="username"
                 android:textColor="@color/colorWhite"
-                android:textSize="21sp"
-                android:layout_margin="5dp"/>
+                android:textSize="21sp" />
 
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/enter_message"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+        app:layout_constraintVertical_bias="1.0"
+        android:padding="5dp"
+        android:layout_margin="@dimen/dimension_10dp"/>
+
+    <RelativeLayout
+        android:id="@+id/enter_message"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimension_10dp"
+        android:padding="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/circular_drawable">
+
+        <EditText
+            android:id="@+id/enter_text_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="3dp"
+            android:layout_toLeftOf="@+id/button_send_message"
+            android:background="@android:color/transparent"
+            android:hint="enter message"
+            android:inputType="text"
+            android:textSize="19sp" />
+
+        <ImageButton
+            android:id="@+id/button_send_message"
+            android:layout_width="30dp"
+            android:layout_height="21dp"
+            android:layout_margin="3dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
+            tools:src="@android:drawable/ic_menu_send" />
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -19,14 +19,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".MessageActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:theme="@style/AppTheme.NoActionBar"
             android:colorMode="default">
         </activity>
-        <activity android:name=".LogInActivity"></activity>
-        <activity android:name=".RegisterActivity"></activity>
-        <activity android:name=".MainActivity"></activity>
+
+        <activity android:name=".LogInActivity">
+
+        </activity>
+
+        <activity android:name=".RegisterActivity">
+
+        </activity>
+
+        <activity android:name=".MainActivity">
+
+        </activity>
     </application>
 
 </manifest>

@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 
@@ -20,39 +22,35 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.FileReader;
+import java.util.HashMap;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageActivity extends AppCompatActivity {
     private CircleImageView profileImage;
     private TextView username;
+    private ImageButton send_button;
+    private EditText text_message;
     private Intent intent;
 
     private Helper helper;
-    private FirebaseUser user;
+    private FirebaseUser currentUser;
     private DatabaseReference reference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
-        /*Toolbar toolbar1 = findViewById(R.id.toolbar01);
-        setSupportActionBar(toolbar1);
-        getSupportActionBar().setTitle("");
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        toolbar1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });*/
-
         helper = new Helper();
         profileImage = findViewById(R.id.message_profileImage);
         username = findViewById(R.id.message_username);
+        send_button = findViewById(R.id.button_send_message);
+        text_message = findViewById(R.id.enter_text_message);
         intent = getIntent();
-        String userID = intent.getStringExtra("userID");
+        final String userID = intent.getStringExtra("userID");
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users").child(userID);
         helper.toastMessage(this, "user ID is: " + userID);
 
@@ -75,7 +73,27 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
+        send_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = text_message.getText().toString();
+                if(!message.trim().isEmpty()){
+                    send_message(currentUser.getUid(), userID, message);
+                }
+                text_message.setText("");
+            }
+        });
+    }
 
+    private void send_message(String sender, String receiver, String message){
+        DatabaseReference data = FirebaseDatabase.getInstance().getReference();
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("sender", sender);
+        hashMap.put("receiver", receiver);
+        hashMap.put("message", message);
+
+        data.child("Chats").push().setValue(hashMap);
 
     }
 
