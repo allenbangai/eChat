@@ -65,19 +65,6 @@ public class Helper{
         context.startActivity(intent);
     }
 
-    /*<androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginBottom="100dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <item name="android:statusBarColor">@android:color/transparent</item>
+    /*<item name="android:statusBarColor">@android:color/transparent</item>
     */
 }
