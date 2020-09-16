@@ -39,6 +39,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private FirebaseUser myUser, contactUser;
     private DatabaseReference reference;
+    private Chats chat;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -60,10 +61,13 @@ public class HomeFragment extends Fragment {
                 users.clear();
 
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    Chats chat = dataSnapshot.getValue(Chats.class);
+                    chat = dataSnapshot.getValue(Chats.class);
 
-                    if(chat.getSender() == myUser.getUid()){
+                    if(chat.getSender() == myUser.getUid()) {
                         readContactUser(chat.getReceiver());
+                    }
+                    if(chat.getReceiver() == myUser.getUid()){
+                        readContactUser(chat.getSender());
                     }
 
                 }
@@ -75,7 +79,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
         return root;
     }
 
@@ -83,18 +86,22 @@ public class HomeFragment extends Fragment {
     private User user;
     private void readContactUser(final String contactID) {
         getReference.addValueEventListener(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     if(dataSnapshot.hasChild(contactID)){
-                        users =
+                        user = dataSnapshot.getValue(User.class);
+                        users.add(user);
                     }
                 }
+
+                userAdapter = new UserAdapter(getContext(), users);
+                recyclerView.setAdapter(userAdapter);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }
