@@ -37,6 +37,7 @@ public class UsersFragment extends Fragment {
         usersViewModel =
                 new ViewModelProvider(this).get(UsersViewModel.class);
         View root = inflater.inflate(R.layout.fragment_users, container, false);
+
         recyclerView = root.findViewById(R.id.user_recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
