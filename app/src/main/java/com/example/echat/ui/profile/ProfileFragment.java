@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.example.echat.Model.User;
 import com.example.echat.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -51,7 +52,13 @@ public class ProfileFragment extends Fragment {
         saveImage = root.findViewById(R.id.save_profile_info);
         editImage = root.findViewById(R.id.edit_profile_info);
 
+        profileUserName = root.findViewById(R.id.profile_username);
+        profileEmail = root.findViewById(R.id.profile_email);
+        profileNumber = root.findViewById(R.id.profile_number);
 
+        editProfileEmail = root.findViewById(R.id.profile_email_edit);
+        editProfileNumber = root.findViewById(R.id.profile_number_edit);
+        editProfileUsername = root.findViewById(R.id.profile_username_edit);
 
 
         return root;
@@ -63,6 +70,15 @@ public class ProfileFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
 
+                if(snapshot.exists()){
+                    profileUserName.setText(user.getUsername());
+                    profileEmail.setText(user.getEmail());
+                    profileNumber.setText(user.getNumber());
+
+                    if(!user.getProfileImageUrl().equals("default")){
+                        Glide.with(getContext()).load(user.getProfileImageUrl()).into(profileImage);
+                    }
+                }
 
             }
 

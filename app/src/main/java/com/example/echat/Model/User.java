@@ -4,6 +4,8 @@ public class User {
     private String id;
     private String username;
     private String profileImageUrl;
+    private String email;
+    private String number;
 
     public User() {
     }
@@ -12,6 +14,14 @@ public class User {
         this.id = id;
         this.username = username;
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public User(String id, String username, String profileImageUrl, String email, String number) {
+        this.id = id;
+        this.username = username;
+        this.profileImageUrl = profileImageUrl;
+        this.email = email;
+        this.number = number;
     }
 
     public String getId() {
@@ -37,4 +47,14 @@ public class User {
     public void setProfileImageUrl(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getNumber() {
+        return number;
+    }
 }
+
+
