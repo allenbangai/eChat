@@ -68,10 +68,7 @@ public class ProfileFragment extends Fragment {
     public ProfileFragment() {
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.P)
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         helper = new Helper(getContext());
         profileViewModel =
                 new ViewModelProvider(this).get(ProfileViewModel.class);
@@ -312,4 +309,5 @@ public class ProfileFragment extends Fragment {
             }
         }
     }
+
 }
