@@ -127,13 +127,34 @@ public class ProfileFragment extends Fragment {
     }
 
     private void changeVisibiltyEdit() {
-        profileNumber.setVisibility(View.GONE);
-        profileUserName.setVisibility(View.GONE);
-        editImage.setVisibility(View.GONE);
+        helper.progressDialogStart("Please Wait", "Checking internet connection");
+        databaseReference.child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
 
-        editProfileUsername.setVisibility(View.VISIBLE);
-        editProfileNumber.setVisibility(View.VISIBLE);
-        saveImage.setVisibility(View.VISIBLE);
+                if(snapshot.exists()){
+                    assert user != null;
+                    editProfileUsername.setText(user.getUsername());
+                    editProfileNumber.setText(user.getNumber());
+
+                    profileNumber.setVisibility(View.GONE);
+                    profileUserName.setVisibility(View.GONE);
+                    editImage.setVisibility(View.GONE);
+
+                    editProfileUsername.setVisibility(View.VISIBLE);
+                    editProfileNumber.setVisibility(View.VISIBLE);
+                    saveImage.setVisibility(View.VISIBLE);
+
+                    helper.progressDialogEnd();
+                }else{
+                    helper.toastMessage("snapshot does not exist");
+                    helper.progressDialogEnd();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
     }
 
     private void changeVisibiltySave() {
@@ -149,12 +170,13 @@ public class ProfileFragment extends Fragment {
     //function to load newly updated profile info
     private void loadProfileInfo(){
         helper.progressDialogStart("Please Wait", "Loading profile info");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
 
                 if(snapshot.exists()){
+                    assert user != null;
                     profileUserName.setText(user.getUsername());
                     profileEmail.setText(user.getEmail());
                     profileNumber.setText(user.getNumber());
