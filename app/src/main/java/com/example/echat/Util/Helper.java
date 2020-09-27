@@ -3,6 +3,7 @@ package com.example.echat.Util;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.echat.DrawerActivity;
@@ -36,9 +37,16 @@ public class Helper{
         progressDialog.dismiss();
     }
 
-
     public void toastMessage(Context context, String message){
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public void toastMessage(String message){
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public void logMessage(Class TAGClass, String errorMessage){
+        Log.d("com.example.echat." + TAGClass.getName(), errorMessage);
     }
 
     public void gotoLoginActivity(Context context){
@@ -65,6 +73,4 @@ public class Helper{
         context.startActivity(intent);
     }
 
-    /*<item name="android:statusBarColor">@android:color/transparent</item>
-    */
 }

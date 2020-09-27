@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.example.echat.Model.User;
 import com.example.echat.R;
+import com.example.echat.Util.Helper;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -48,11 +49,14 @@ public class ProfileFragment extends Fragment {
 
     private static final int IMAGE_REQUEST = 1;
     private static int ENABLE_ONCLICK = 0;
+    private String imageUriStr = "";
+
     private CircleImageView profileImage, saveImage, editImage;
     private TextView profileEmail, profileUserName, profileNumber;
     private EditText editProfileEmail, editProfileUsername, editProfileNumber;
 
     private ProfileViewModel profileViewModel;
+    private Helper helper;
 
     private DatabaseReference databaseReference;
     private FirebaseUser currentUser;
@@ -60,12 +64,12 @@ public class ProfileFragment extends Fragment {
 
     private Uri imageUri;
     private StorageTask storageTask;
-    private String imageUriStr = "";
 
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        helper = new Helper(getContext());
         profileViewModel =
                 new ViewModelProvider(this).get(ProfileViewModel.class);
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
@@ -82,7 +86,8 @@ public class ProfileFragment extends Fragment {
                 if(ENABLE_ONCLICK == 1){
                     openSaveImage();
                 }else if(ENABLE_ONCLICK == 0){
-                    //TODO: toast message for user to know that he has to click edit button to edit image
+                    //TODO DONE: toast message for user to know that he has to click edit button to edit image
+                    helper.toastMessage("Please click edit button to change profile");
                 }
             }
         });
@@ -111,8 +116,8 @@ public class ProfileFragment extends Fragment {
         editProfileNumber = root.findViewById(R.id.profile_number_edit);
         editProfileUsername = root.findViewById(R.id.profile_username_edit);
 
+        //call function loadProfileInfo to load profile info on fragment loading
         loadProfileInfo();
-
 
         return root;
     }
@@ -139,6 +144,7 @@ public class ProfileFragment extends Fragment {
 
     //function to load newly updated profile info
     private void loadProfileInfo(){
+        helper.progressDialogStart("Please Wait", "Loading profile info");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -152,8 +158,12 @@ public class ProfileFragment extends Fragment {
                     if(!user.getProfileImageUrl().equals("default")){
                         Glide.with(getContext()).load(user.getProfileImageUrl()).into(profileImage);
                     }
+                    helper.progressDialogEnd();
+                }else{
+                    helper.toastMessage("snapshot doesn't exist");
+                    helper.logMessage(ProfileFragment.class, "snapshot doesn't exist");
+                    helper.progressDialogEnd();
                 }
-
             }
 
             @Override
