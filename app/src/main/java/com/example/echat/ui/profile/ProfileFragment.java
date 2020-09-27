@@ -54,7 +54,19 @@ public class ProfileFragment extends Fragment {
 
         profileImage = root.findViewById(R.id.profile_image);
         saveImage = root.findViewById(R.id.save_profile_info);
+        saveImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editprofileInfo();
+            }
+        });
         editImage = root.findViewById(R.id.edit_profile_info);
+        editImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeVisibiltyEdit();
+            }
+        });
 
         profileUserName = root.findViewById(R.id.profile_username);
         profileEmail = root.findViewById(R.id.profile_email);
@@ -66,7 +78,28 @@ public class ProfileFragment extends Fragment {
 
         loadProfileInfo();
 
+
         return root;
+    }
+
+    private void changeVisibiltyEdit() {
+        profileNumber.setVisibility(View.GONE);
+        profileUserName.setVisibility(View.GONE);
+        editImage.setVisibility(View.GONE);
+
+        editProfileUsername.setVisibility(View.VISIBLE);
+        editProfileNumber.setVisibility(View.VISIBLE);
+        saveImage.setVisibility(View.VISIBLE);
+    }
+
+    private void changeVisibiltySave() {
+        profileNumber.setVisibility(View.VISIBLE);
+        profileUserName.setVisibility(View.VISIBLE);
+        editImage.setVisibility(View.VISIBLE);
+
+        editProfileUsername.setVisibility(View.GONE);
+        editProfileNumber.setVisibility(View.GONE);
+        saveImage.setVisibility(View.GONE);
     }
 
     private void loadProfileInfo(){
@@ -94,7 +127,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    public void editprofileInfo(){
+    private void editprofileInfo(){
 
         HashMap<String, String> hashMap  = new HashMap<>();
         String profileImageUrl = "", username, number;
@@ -117,7 +150,8 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-
+                    loadProfileInfo();
+                    changeVisibiltySave();
                 }else{
 
                 }
