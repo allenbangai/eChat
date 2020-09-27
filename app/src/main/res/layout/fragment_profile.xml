@@ -78,19 +78,6 @@
                 android:textColor="@color/colorBlack"
                 android:textAlignment="center"/>
 
-            <EditText
-                android:id="@+id/profile_email_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:textSize="21sp"
-                android:padding="5dp"
-                android:textColor="@color/colorBlack"
-                android:layout_gravity="center_vertical"
-                android:textAlignment="center"
-                android:gravity="center"
-                android:visibility="gone"/>
-
         </LinearLayout>
 
         <LinearLayout
