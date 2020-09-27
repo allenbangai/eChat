@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.example.echat.Model.User;
 import com.example.echat.R;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,6 +30,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 
 import java.net.URL;
 import java.security.PrivateKey;
@@ -49,7 +52,9 @@ public class ProfileFragment extends Fragment {
     private FirebaseUser currentUser;
     private StorageReference storageReference;
 
-    private URL url;
+    private Uri imageUri;
+    private StorageTask storageTask;
+    private String imageUriStr;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -181,7 +186,32 @@ public class ProfileFragment extends Fragment {
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
-    private void uploadImage(){
+    private void upLoadImage(){
 
+        if(imageUri != null){
+            final StorageReference imageFileReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtention());
+            storageTask = imageFileReference.getFile(imageUri);
+            storageTask.continueWith(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if(!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    return imageFileReference.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener() {
+                @Override
+                public void onComplete(@NonNull Task task) {
+                    if(task.isSuccessful()) {
+                        Uri uri = (Uri) task.getResult();
+                        imageUriStr = uri.toString();
+
+                    }else{
+                        String errorMessage = task.getException().getMessage();
+                    }
+                }
+            });
+        }
     }
 }
