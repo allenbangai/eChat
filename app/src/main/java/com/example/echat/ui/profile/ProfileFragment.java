@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -39,6 +40,8 @@ import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.app.Activity.RESULT_OK;
+
 public class ProfileFragment extends Fragment {
 
     private static final int IMAGE_REQUEST = 1;
@@ -54,7 +57,7 @@ public class ProfileFragment extends Fragment {
 
     private Uri imageUri;
     private StorageTask storageTask;
-    private String imageUriStr;
+    private String imageUriStr = "";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -71,7 +74,7 @@ public class ProfileFragment extends Fragment {
         saveImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editprofileInfo();
+                saveprofileInfo();
             }
         });
         editImage = root.findViewById(R.id.edit_profile_info);
@@ -116,6 +119,7 @@ public class ProfileFragment extends Fragment {
         saveImage.setVisibility(View.GONE);
     }
 
+    //function to load newly updated profile info
     private void loadProfileInfo(){
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -141,10 +145,11 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void editprofileInfo(){
+    //function to save profile info online to firebase
+    private void saveprofileInfo(){
 
         HashMap<String, String> hashMap  = new HashMap<>();
-        String profileImageUrl = "", username, number;
+        String profileImageUrl = imageUriStr, username, number;
         username = editProfileUsername.getText().toString();
         number = editProfileNumber.getText().toString();
 
@@ -183,15 +188,17 @@ public class ProfileFragment extends Fragment {
     private String getFileExtention(){
         ContentResolver contentResolver = getContext().getContentResolver();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(imageUri));
     }
 
+    //upload image to firebase
     private void upLoadImage(){
 
         if(imageUri != null){
+            profileImage.setImageURI(imageUri);
             final StorageReference imageFileReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtention());
-            storageTask = imageFileReference.getFile(imageUri);
-            storageTask.continueWith(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            storageTask = imageFileReference.putFile(imageUri);
+            storageTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
                 public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                     if(!task.isSuccessful()) {
@@ -206,12 +213,32 @@ public class ProfileFragment extends Fragment {
                     if(task.isSuccessful()) {
                         Uri uri = (Uri) task.getResult();
                         imageUriStr = uri.toString();
+                        //TODO: toast and log messages to describe event
 
                     }else{
                         String errorMessage = task.getException().getMessage();
+                        //TODO: toast and log messages to describe event
                     }
                 }
             });
+        }else{
+            //TODO: no image selected
+        }
+    }
+
+    //code to call upload image function in activity for result
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null){
+            imageUri = data.getData();
+
+            if(storageTask != null && storageTask.isInProgress()){
+                //TODO : toast message : upload in progress
+            }else{
+                upLoadImage();
+            }
         }
     }
 }
