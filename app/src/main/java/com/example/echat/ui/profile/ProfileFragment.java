@@ -3,6 +3,7 @@ package com.example.echat.ui.profile;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -45,6 +47,7 @@ import static android.app.Activity.RESULT_OK;
 public class ProfileFragment extends Fragment {
 
     private static final int IMAGE_REQUEST = 1;
+    private static int ENABLE_ONCLICK = 0;
     private CircleImageView profileImage, saveImage, editImage;
     private TextView profileEmail, profileUserName, profileNumber;
     private EditText editProfileEmail, editProfileUsername, editProfileNumber;
@@ -59,6 +62,8 @@ public class ProfileFragment extends Fragment {
     private StorageTask storageTask;
     private String imageUriStr = "";
 
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         profileViewModel =
@@ -70,10 +75,22 @@ public class ProfileFragment extends Fragment {
         storageReference = FirebaseStorage.getInstance().getReference().child(currentUser.getUid());
 
         profileImage = root.findViewById(R.id.profile_image);
+        //code to enable onclick listener for profile image only when user want to edit profile image
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ENABLE_ONCLICK == 1){
+                    openSaveImage();
+                }else if(ENABLE_ONCLICK == 0){
+                    //TODO: toast message for user to know that he has to click edit button to edit image
+                }
+            }
+        });
         saveImage = root.findViewById(R.id.save_profile_info);
         saveImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ENABLE_ONCLICK = 0;
                 saveprofileInfo();
             }
         });
@@ -81,6 +98,7 @@ public class ProfileFragment extends Fragment {
         editImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ENABLE_ONCLICK = 1;
                 changeVisibiltyEdit();
             }
         });
@@ -178,6 +196,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    // function with intent to get image and start activity for result...
     private void openSaveImage(){
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -185,6 +204,7 @@ public class ProfileFragment extends Fragment {
         startActivityForResult(intent, IMAGE_REQUEST);
     }
 
+    //function to get file extention
     private String getFileExtention(){
         ContentResolver contentResolver = getContext().getContentResolver();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
