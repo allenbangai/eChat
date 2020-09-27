@@ -60,6 +60,7 @@ public class ProfileFragment extends Fragment {
         editProfileNumber = root.findViewById(R.id.profile_number_edit);
         editProfileUsername = root.findViewById(R.id.profile_username_edit);
 
+        loadProfileInfo();
 
         return root;
     }
