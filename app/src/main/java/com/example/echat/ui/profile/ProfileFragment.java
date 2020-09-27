@@ -53,7 +53,7 @@ public class ProfileFragment extends Fragment {
 
     private CircleImageView profileImage, saveImage, editImage;
     private TextView profileEmail, profileUserName, profileNumber;
-    private EditText editProfileEmail, editProfileUsername, editProfileNumber;
+    private EditText editProfileUsername, editProfileNumber;
 
     private ProfileViewModel profileViewModel;
     private Helper helper;
@@ -64,6 +64,9 @@ public class ProfileFragment extends Fragment {
 
     private Uri imageUri;
     private StorageTask storageTask;
+
+    public ProfileFragment() {
+    }
 
 
     @RequiresApi(api = Build.VERSION_CODES.P)
@@ -114,7 +117,6 @@ public class ProfileFragment extends Fragment {
         profileEmail = root.findViewById(R.id.profile_email);
         profileNumber = root.findViewById(R.id.profile_number);
 
-        editProfileEmail = root.findViewById(R.id.profile_email_edit);
         editProfileNumber = root.findViewById(R.id.profile_number_edit);
         editProfileUsername = root.findViewById(R.id.profile_username_edit);
 
@@ -229,9 +231,12 @@ public class ProfileFragment extends Fragment {
 
     //upload image to firebase
     private void upLoadImage(){
-
         if(imageUri != null){
             profileImage.setImageURI(imageUri);
+
+            //progress bar to upload profile image
+            helper.progressDialogStart("Please Wait", "Uploading profile image");
+
             final StorageReference imageFileReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtention());
             storageTask = imageFileReference.putFile(imageUri);
             storageTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
@@ -249,16 +254,23 @@ public class ProfileFragment extends Fragment {
                     if(task.isSuccessful()) {
                         Uri uri = (Uri) task.getResult();
                         imageUriStr = uri.toString();
-                        //TODO: toast and log messages to describe event
+                        //TODO DONE: toast and log messages to describe event
+                        helper.logMessage(ProfileFragment.class, "profile image successfully uploaded");
+                        helper.toastMessage("profile image successfully uploaded");
+                        helper.progressDialogEnd();
 
                     }else{
                         String errorMessage = task.getException().getMessage();
-                        //TODO: toast and log messages to describe event
+                        //TODO DONE: toast and log messages to describe event
+                        helper.logMessage(ProfileFragment.class, "Error message: " + errorMessage);
+                        helper.toastMessage("Error message: " + errorMessage);
+                        helper.progressDialogEnd();
                     }
                 }
             });
         }else{
-            //TODO: no image selected
+            //TODO DONE: no image selected
+            helper.toastMessage("image not selected");
         }
     }
 
@@ -271,7 +283,7 @@ public class ProfileFragment extends Fragment {
             imageUri = data.getData();
 
             if(storageTask != null && storageTask.isInProgress()){
-                //TODO : toast message : upload in progress
+                //TODO DONE: toast message : upload in progress
                 helper.toastMessage("image upload in progress");
             }else{
                 upLoadImage();
