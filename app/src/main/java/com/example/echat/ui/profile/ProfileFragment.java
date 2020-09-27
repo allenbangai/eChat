@@ -97,6 +97,8 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 ENABLE_ONCLICK = 0;
                 saveprofileInfo();
+                loadProfileInfo();
+                changeVisibiltySave();
             }
         });
         editImage = root.findViewById(R.id.edit_profile_info);
@@ -175,32 +177,36 @@ public class ProfileFragment extends Fragment {
 
     //function to save profile info online to firebase
     private void saveprofileInfo(){
-
+        helper.progressDialogStart("Please Wait", "Saving profile info");
         HashMap<String, String> hashMap  = new HashMap<>();
         String profileImageUrl = imageUriStr, username, number;
         username = editProfileUsername.getText().toString();
         number = editProfileNumber.getText().toString();
 
         if(username.isEmpty()){
-
+            editProfileUsername.requestFocus();
+            helper.toastMessage("username field is empty");
         }else if(number.isEmpty()){
-
-        }else if(profileImageUrl.isEmpty()){
-
+            editProfileNumber.requestFocus();
+            helper.toastMessage("username field is empty");
+        }else if(!profileImageUrl.isEmpty()){
+            hashMap.put("profileImageUrl", profileImageUrl);
         }else{
             hashMap.put("username", username);
             hashMap.put("number", number);
-            hashMap.put("profileImageUrl", profileImageUrl);
         }
 
         databaseReference.child(currentUser.getUid()).setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    loadProfileInfo();
-                    changeVisibiltySave();
+                    helper.logMessage(ProfileFragment.class, "Data successfully uploaded");
+                    helper.toastMessage("Data successfully uploaded");
+                    helper.progressDialogEnd();
                 }else{
-
+                    helper.logMessage(ProfileFragment.class, "Error message: " + task.getException());
+                    helper.toastMessage("Error message: " + task.getException());
+                    helper.progressDialogEnd();
                 }
             }
         });
@@ -266,6 +272,7 @@ public class ProfileFragment extends Fragment {
 
             if(storageTask != null && storageTask.isInProgress()){
                 //TODO : toast message : upload in progress
+                helper.toastMessage("image upload in progress");
             }else{
                 upLoadImage();
             }
