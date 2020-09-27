@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -94,9 +95,7 @@
                 android:textSize="21sp"
                 android:padding="5dp"
                 android:textColor="@color/colorBlack"
-                android:layout_gravity="center_vertical"
-                android:textAlignment="center"
-                android:gravity="center"/>
+                android:textAlignment="center"/>
 
             <EditText
                 android:id="@+id/profile_number_edit"
@@ -106,36 +105,37 @@
                 android:textSize="21sp"
                 android:padding="5dp"
                 android:textColor="@color/colorBlack"
-                android:layout_gravity="center_vertical"
                 android:textAlignment="center"
-                android:gravity="center"
                 android:visibility="gone"/>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="right||bottom">
+                android:layout_height="match_parent">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/save_profile_info"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/edit_profile"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
                     android:background="@color/colorPrimary"
-                    android:layout_marginBottom="@dimen/dimension_10dp"
-                    android:layout_marginRight="@dimen/dimension_10dp"
-                    android:visibility="gone"/>
+                    android:src="@drawable/edit_profile"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/edit_profile_info"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/edit_profile"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
                     android:background="@color/colorPrimary"
-                    android:layout_marginBottom="@dimen/dimension_10dp"
-                    android:layout_marginRight="@dimen/dimension_10dp"/>
+                    android:src="@drawable/edit_profile"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
     </LinearLayout>
