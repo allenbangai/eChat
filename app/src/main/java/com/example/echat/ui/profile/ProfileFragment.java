@@ -14,6 +14,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.example.echat.Model.User;
 import com.example.echat.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -23,6 +25,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -35,7 +39,7 @@ public class ProfileFragment extends Fragment {
     private ProfileViewModel profileViewModel;
 
     private DatabaseReference databaseReference;
-    private FirebaseUser user;
+    private FirebaseUser currentUser;
     private StorageReference storageReference;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -45,8 +49,8 @@ public class ProfileFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
 
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        storageReference = FirebaseStorage.getInstance().getReference().child(user.getUid());
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        storageReference = FirebaseStorage.getInstance().getReference().child(currentUser.getUid());
 
         profileImage = root.findViewById(R.id.profile_image);
         saveImage = root.findViewById(R.id.save_profile_info);
@@ -86,6 +90,37 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+    }
+
+    public void editprofileInfo(){
+
+        HashMap<String, String> hashMap  = new HashMap<>();
+        String profileImageUrl = "", username, number;
+        username = editProfileUsername.getText().toString();
+        number = editProfileNumber.getText().toString();
+
+        if(username.isEmpty()){
+
+        }else if(number.isEmpty()){
+
+        }else if(profileImageUrl.isEmpty()){
+
+        }else{
+            hashMap.put("username", username);
+            hashMap.put("number", number);
+            hashMap.put("profileImageUrl", profileImageUrl);
+        }
+
+        databaseReference.child(currentUser.getUid()).setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+
+                }else{
+
+                }
             }
         });
     }
