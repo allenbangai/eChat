@@ -1,9 +1,13 @@
 package com.example.echat.ui.profile;
 
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -26,12 +30,15 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.net.URL;
+import java.security.PrivateKey;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment {
 
+    private static final int IMAGE_REQUEST = 1;
     private CircleImageView profileImage, saveImage, editImage;
     private TextView profileEmail, profileUserName, profileNumber;
     private EditText editProfileEmail, editProfileUsername, editProfileNumber;
@@ -41,6 +48,8 @@ public class ProfileFragment extends Fragment {
     private DatabaseReference databaseReference;
     private FirebaseUser currentUser;
     private StorageReference storageReference;
+
+    private URL url;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -157,5 +166,22 @@ public class ProfileFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void openSaveImage(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, IMAGE_REQUEST);
+    }
+
+    private String getFileExtention(){
+        ContentResolver contentResolver = getContext().getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+
+    private void uploadImage(){
+
     }
 }
