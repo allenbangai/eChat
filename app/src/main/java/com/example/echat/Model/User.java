@@ -6,8 +6,18 @@ public class User {
     private String profileImageUrl;
     private String email;
     private String number;
+    private String status;
 
     public User() {
+    }
+
+    public User(String id, String username, String profileImageUrl, String email, String number, String status) {
+        this.id = id;
+        this.username = username;
+        this.profileImageUrl = profileImageUrl;
+        this.email = email;
+        this.number = number;
+        this.status = status;
     }
 
     public User(String id, String username, String profileImageUrl) {
@@ -54,6 +64,14 @@ public class User {
 
     public String getNumber() {
         return number;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
 
