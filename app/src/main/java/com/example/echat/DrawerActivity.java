@@ -30,6 +30,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.util.HashMap;
+
 public class DrawerActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Helper helper;
@@ -61,10 +63,11 @@ public class DrawerActivity extends AppCompatActivity {
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                R.id.nav_home, R.id.nav_profile, R.id.nav_users)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -130,8 +133,7 @@ public class DrawerActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     }
 
     @Override
@@ -141,6 +143,12 @@ public class DrawerActivity extends AppCompatActivity {
         if(user == null){
             helper.gotoLoginActivity(getApplicationContext());
         }
+    }
+
+    public void status(String status){
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUser);
+
+        HashMap<String, Object> hashMap = new HashMap<>();
     }
 }
 
