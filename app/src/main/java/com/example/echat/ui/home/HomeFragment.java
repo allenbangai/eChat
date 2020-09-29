@@ -41,10 +41,8 @@ public class HomeFragment extends Fragment {
     private DatabaseReference reference;
     private Chats chat;
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel = new  ViewModelProvider((ViewModelStoreOwner) this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
         recyclerView = root.findViewById(R.id.myUser_recyclerView);

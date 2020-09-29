@@ -15,11 +15,11 @@
             android:id="@+id/action_HomeFragment_to_HomeSecondFragment"
             app:destination="@id/nav_home_second" />
     </fragment>
+
     <fragment
         android:id="@+id/nav_home_second"
-        android:name="com.example.echat.ui.home.HomeSecondFragment"
-        android:label="@string/home_second"
-        tools:layout="@layout/fragment_home_second">
+        android:label="@string/home_second">
+
         <action
             android:id="@+id/action_HomeSecondFragment_to_HomeFragment"
             app:destination="@id/nav_home" />
@@ -38,6 +38,6 @@
     <fragment
         android:id="@+id/nav_users"
         android:name="com.example.echat.ui.users.UsersFragment"
-        android:label="@string/menu_slideshow"
+        android:label="@string/menu_users"
         tools:layout="@layout/fragment_users" />
 </navigation>
