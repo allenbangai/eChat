@@ -21,26 +21,35 @@ import com.example.echat.Util.Helper;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private Context context;
     private List<User> myUsers;
     private Helper helper = new Helper();
+    private boolean isChat;
 
-    public UserAdapter(Context context, List<User> users){
+    public UserAdapter(Context context, List<User> users, boolean isChat){
         this.context = context;
         this.myUsers = users;
+        this.isChat = isChat;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView username;
-        public ImageView userImage;
+        public CircleImageView userImage;
+        public CircleImageView img_on;
+        public CircleImageView img_off;
 
         public ViewHolder(View itemView){
             super(itemView);
 
             username = itemView.findViewById(R.id.user_username);
             userImage = itemView.findViewById(R.id.user_profile_image);
+
+            img_on = itemView.findViewById(R.id.image_on);
+            img_off = itemView.findViewById(R.id.image_off);
         }
     }
 
@@ -99,6 +108,19 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             holder.userImage.setImageResource(R.drawable.profile);
         }else {
             Glide.with(context).load(user.getProfileImageUrl()).into(holder.userImage);
+        }
+
+        if (isChat) {
+            if(user.getStatus().equals("online")){
+                holder.img_on.setVisibility(View.VISIBLE);
+                holder.img_on.setVisibility(View.GONE);
+            }else{
+                holder.img_on.setVisibility(View.GONE);
+                holder.img_on.setVisibility(View.VISIBLE);
+            }
+        }else {
+            holder.img_on.setVisibility(View.GONE);
+            holder.img_on.setVisibility(View.GONE);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

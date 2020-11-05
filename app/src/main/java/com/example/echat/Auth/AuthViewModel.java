@@ -83,6 +83,7 @@ public class AuthViewModel {
                         hashMap.put("email", emailStr);
                         hashMap.put("number", phoneNumberStr);
                         hashMap.put("profileImageUrl", "default");
+                        hashMap.put("status", "offline");
                         reference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {

@@ -1,17 +1,26 @@
 package com.example.echat;
 
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.bumptech.glide.Glide;
 import com.example.echat.Model.User;
 import com.example.echat.Util.Helper;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,15 +29,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import androidx.annotation.NonNull;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import java.util.HashMap;
 
@@ -64,7 +64,7 @@ public class DrawerActivity extends AppCompatActivity {
 
         helper = new Helper();
         mAuth = FirebaseAuth.getInstance();
-        if(mAuth.getCurrentUser() != null){
+        if (mAuth.getCurrentUser() != null) {
             currentUser = mAuth.getCurrentUser().getUid();
             helper.toastMessage(this, "ID is " + currentUser);
         }
@@ -77,15 +77,15 @@ public class DrawerActivity extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     /*if(dataSnapshot.hasChild("username")){
                         username.setText(dataSnapshot.child("username").getValue().toString());
                     }*/
                     User user = dataSnapshot.getValue(User.class);
                     username.setText(user.getUsername());
-                    if(user.getProfileImageUrl().equals("default")){
+                    if (user.getProfileImageUrl().equals("default")) {
                         profileImage.setImageResource(R.drawable.profile);
-                    }else{
+                    } else {
                         Glide.with(DrawerActivity.this).load(user.getProfileImageUrl()).into(profileImage);
                     }
                     helper.toastMessage(getApplicationContext(), user.getUsername());
@@ -109,7 +109,7 @@ public class DrawerActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.logout:
                 mAuth.signOut();
                 helper.gotoLoginActivity(getApplicationContext());
@@ -128,16 +128,34 @@ public class DrawerActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
-        if(user == null){
+        if (user == null) {
             helper.gotoLoginActivity(getApplicationContext());
         }
     }
 
-    public void status(String status){
+    public void status(String status) {
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUser);
 
         HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("status", status);
+
+        databaseReference.updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        status("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        status("online");
     }
 }
-
-//tools:showIn="@layout/app_bar_main"

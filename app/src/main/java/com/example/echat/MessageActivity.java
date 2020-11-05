@@ -13,12 +13,15 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.example.echat.Adapter.MessageAdater;
 import com.example.echat.Model.Chats;
 import com.example.echat.Model.User;
 import com.example.echat.Util.Helper;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -39,6 +42,7 @@ public class MessageActivity extends AppCompatActivity {
     private ImageButton send_button;
     private EditText text_message;
     private RecyclerView recyclerView;
+    private Toolbar toolbar02;
     private Intent intent;
 
     private Helper helper;
@@ -50,6 +54,17 @@ public class MessageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
+
+        toolbar02 = findViewById(R.id.toolbar02);
+        setSupportActionBar(toolbar02);
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar02.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MessageActivity.this, DrawerActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            }
+        });
 
         helper = new Helper();
         profileImage = findViewById(R.id.message_profileImage);
@@ -137,6 +152,32 @@ public class MessageActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void status(String status) {
+        reference = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUser.getUid());
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("status", status);
+
+        reference.updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        status("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        status("online");
     }
 
 }

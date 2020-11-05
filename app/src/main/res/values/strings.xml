@@ -20,4 +20,5 @@
     <string name="username">username</string>
     <string name="allen_bangai">Allen Bangai</string>
     <string name="default_a">Default</string>
+    <string name="search_user">search user</string>
 </resources>

@@ -47,7 +47,8 @@ public class HomeFragment extends Fragment {
 
         recyclerView = root.findViewById(R.id.myUser_recyclerView);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(root.getContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         users = new ArrayList<>();
 
@@ -94,7 +95,7 @@ public class HomeFragment extends Fragment {
                     }
                 }
 
-                userAdapter = new UserAdapter(getContext(), users);
+                userAdapter = new UserAdapter(getContext(), users, true);
                 recyclerView.setAdapter(userAdapter);
             }
 
